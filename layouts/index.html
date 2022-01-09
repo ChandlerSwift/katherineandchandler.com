@@ -1,200 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katherine and Chandler</title>
-    {{- $image := resources.Get "images/engagement-tree.jpg" -}}
-    {{- $lg_cover := $image.Resize "2000x" }}
-    {{- $sm_cover := $image.Resize "800x" }}
-    <!-- purchased from https://creativemarket.com/GraphicBlueBird/4970475-Sunflowers-and-Burgundy-Flowers -->
-    {{- $image = resources.Get "images/corner-bouquet-cropped.png" -}}
-    {{- $corner_bouquet := $image.Resize "400x" }}
-    <style>
-        :root {
-            --burgundy: #8a1c17;
-            --header-gray: #c3bfbe;
-            --super-light-gray: #e9e5e5;
-        }
-        @font-face {
-            font-family: 'charterregular';
-            src: url('/fonts/charter/charter_regular-webfont.woff2') format('woff2'),
-                url('/fonts/charter/charter_regular-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'charterbold';
-            src: url('/fonts/charter/charter_bold-webfont.woff2') format('woff2'),
-                url('/fonts/charter/charter_bold-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'charteritalic';
-            src: url('/fonts/charter/charter_italic-webfont.woff2') format('woff2'),
-                url('/fonts/charter/charter_italic-webfont.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            height: 100%;
-        }
-
-        img#header, h2.date-header, div.down-container {
-            max-width: 100%;
-            filter: drop-shadow(0px 0px 8px #000) drop-shadow(0px 0px 8px rgba(0,0,0,0.2));
-        }
-        h2.date-header {
-            font-family: charterregular, serif;
-            font-size: 3em;
-        }
-
-        div.home-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #fff;
-            background: url("{{ $lg_cover.RelPermalink }}") no-repeat center center/cover;
-        }
-
-        div.down-container {
-            padding: 20px;
-            font-size: 5em;
-            font-family: sans-serif;
-            position: absolute;
-            bottom: 0;
-        }
-
-        div.down-container a {
-            color: white;
-            text-decoration: none;
-        }
-
-        @media screen and (max-width: 800px) {
-            div.home-header {
-                background: url("{{ $sm_cover.RelPermalink }}") no-repeat center center/cover fixed;
-            }
-        }
-
-        div.links {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-evenly;
-            align-items: center;
-            height: 150px;
-            padding-left: 15%;
-        }
-
-        div.links img {
-            height: 75px;
-        }
-
-        div.links a {
-            display: inline-block;
-            text-align: center;
-            font-family: charterbold, serif;
-            text-decoration: none;
-            color: #666;
-        }
-
-        div.links a:hover {
-            color: black;
-            text-decoration: underline;
-        }
-
-        div.homepage.links {
-            height: 2em;
-            margin: 2em 0;
-            padding: 0;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            background-color: rgba(0,0,0,.5);
-            box-shadow: #000 0 0 2em;
-        }
-
-        div.homepage.links img {
-            /* TODO: fix the overlap between shadows being too dark; tweak shadows */
-            /* brightness and filter are to make it white not grey */
-            filter: brightness(0) invert(1) drop-shadow(0px 0px 15px #000) drop-shadow(0px 0px 15px #000) drop-shadow(0px 0px 15px #000) drop-shadow(0px 0px 15px #000);
-        }
-
-        div.homepage.links a {
-            color: #fff;
-        }
-
-        div.container {
-            min-height: 100%;
-            /* https://www.sitepoint.com/css3-transform-background-image/ */
-            position: relative;
-            overflow: hidden;
-            background: url("{{ $corner_bouquet.RelPermalink }}") top left no-repeat;
-            background-size: 20% auto;
-        }
-
-        div.container::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url("{{ $corner_bouquet.RelPermalink }}") top left no-repeat;
-            background-size: 20% auto;
-            transform: rotate(180deg);
-        }
-
-        div.content {
-            text-align: center;
-            font-family: charteritalic, serif;
-            color: var(--burgundy);
-        }
-
-        div.content h2 {
-            font-size: 3em;
-            font-weight: normal;
-        }
-
-        div.content p {
-            font-size: 1.5em;
-        }
-
-        div.content a {
-            color: var(--burgundy);
-            text-decoration: none;
-        }
-
-        div.content a:hover {
-            text-decoration: underline;
-        }
-
-        img.header {
-            max-width: 90%;
-        }
-    </style>
-</head>
-
+{{ partial "head" . }}
 <body>
     <div class="home-header">
         <div class="homepage nav links">
             <a href="/#"><img src="/images/logo.svg" alt="Home"></a>
             <a href="/#nav">Event Information</a>
-            <a href="Travel.html">Travel</a>
-            <a href="FAQ.html">FAQ</a>
-            <a href="Things To Do.html">Things To Do</a>
-            <a href="Photos.html">Photos</a>
-            <a href="RSVP.html">RSVP</a>
+            <a href="/travel">Travel</a>
+            <a href="/faq">FAQ</a>
+            <a href="/things-to-do">Things To Do</a>
+            <a href="/photos">Photos</a>
+            <a href="/rsvp">RSVP</a>
         </div>
         <img id="header" src="/images/katherine-and-chandler.svg" alt="">
         <h2 class="date-header">9 &middot; 3 &middot; 22</h2>
@@ -206,19 +20,19 @@
         <div id="nav" class="links">
             <a href="/#"><img src="/images/logo.svg" alt="Home"></a>
             <a href="/#nav">Event Information</a>
-            <a href="Travel.html">Travel</a>
-            <a href="FAQ.html">FAQ</a>
-            <a href="Things To Do.html">Things To Do</a>
-            <a href="Photos.html">Photos</a>
-            <a href="RSVP.html">RSVP</a>
+            <a href="/travel">Travel</a>
+            <a href="/faq">FAQ</a>
+            <a href="/things-to-do">Things To Do</a>
+            <a href="/photos">Photos</a>
+            <a href="/rsvp">RSVP</a>
         </div>
         <div class="content">
             <img class="header" src="/images/headers/ceremony-and-reception-information.svg" alt="Ceremony and Reception Information">
             <h2>Ceremony</h2>
-            <p>Saturday, September 3, 2022<br>4:00 in the afternoon</p>
-            <p><a href="https://goo.gl/maps/rQG8BiwwJcwydun17">Silverwood Great Hall<br>2500 County Road E<br>St. Anthony, MN 55421</a></p>
+            <p class="big">Saturday, September 3, 2022<br>4:00 in the afternoon</p>
+            <p class="big"><a href="https://goo.gl/maps/rQG8BiwwJcwydun17">Silverwood Great Hall<br>2500 County Road E<br>St. Anthony, MN 55421</a></p>
             <h2>Cocktail Hour and Reception</h2>
-            <p>Immediately following ceremony</p>
+            <p class="big">Immediately following ceremony</p>
         </div>
     </div>
 </body>
