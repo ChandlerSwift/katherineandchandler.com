@@ -2,13 +2,7 @@
 <body>
     <div class="home-header">
         <div class="homepage nav links">
-            <a href="/#"><img src="/images/logo.svg" alt="Home"></a>
-            <a href="/#nav">Event Information</a>
-            <a href="/travel">Travel</a>
-            <a href="/faq">FAQ</a>
-            <a href="/things-to-do">Things To Do</a>
-            <a href="/photos">Photos</a>
-            <a href="/rsvp">RSVP</a>
+            {{ partial "links" . }}
         </div>
         <img id="header" src="/images/katherine-and-chandler.svg" alt="">
         <h2 class="date-header">9 &middot; 3 &middot; 22</h2>
@@ -18,13 +12,7 @@
     </div>
     <div class="container">
         <div id="nav" class="links">
-            <a href="/#"><img src="/images/logo.svg" alt="Home"></a>
-            <a href="/#nav">Event Information</a>
-            <a href="/travel">Travel</a>
-            <a href="/faq">FAQ</a>
-            <a href="/things-to-do">Things To Do</a>
-            <a href="/photos">Photos</a>
-            <a href="/rsvp">RSVP</a>
+            {{ partial "links" . }}
         </div>
         <div class="content">
             <img class="header" src="/images/headers/ceremony-and-reception-information.svg" alt="Ceremony and Reception Information">
