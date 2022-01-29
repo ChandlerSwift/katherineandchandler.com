@@ -3,10 +3,13 @@ kind: page
 title: RSVP
 ---
 <img class="header" src="/images/headers/rsvp.svg" alt="RSVP">
-<h3>Please let us know your plans by Saturday, 
-    August 6, 2022</h3>
-<h4>Please enter the first and last name of one member 
-    of your party below.<h4>
-<h4> If you're responding for you and a guest 
-    (or your family), you'll be able to RSVP for your 
-    entire group on the next page.<h4>
+<h3>Please let us know your plans by Saturday, August 6, 2022</h3>
+<p>Enter the first and last name of one member of your party below. If you're
+responding for both yourself and a guest (or for your family), you'll be able to
+RSVP for your entire group on the next page.</p>
+
+<form action="/rsvp-confirm/" method="POST">
+    <div class="form-group">
+        <input type="text" name="name" id="name" style="width:50%;max-width:400px;" placeholder="Name" required><button type="submit">Continue</button>
+    </div>
+</form>
