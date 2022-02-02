@@ -1,3 +1,4 @@
 baseURL = 'https://katherineandchandler.com/'
 languageCode = 'en-us'
 title = 'Katherine & Chandler'
+timeout = '120s'
