@@ -281,5 +281,49 @@
         .form-group :not(:first-child) {
             border-left: none;
         }
+
+        /* Collapsible navbar */
+        .collapsible-menu input, .collapsible-menu label {
+            display: none;
+        }
+        @media screen and (max-width: 650px) {
+            div.homepage.links {
+                display: none;
+            }
+            img.header {
+                margin-top: 2em;
+            }
+            .collapsible-menu .links {
+                height: 0;
+                overflow: hidden;
+                /* transition: height 300ms; TODO: this doesn't work with auto */
+            }
+            .collapsible-menu label {
+                display: initial;
+                font-size: 2em;
+                position: absolute;
+                top: 1em;
+                right: 1em;
+                color: #555;
+                cursor: pointer;
+                user-select: none;
+                transition: 100ms;
+            }
+            .collapsible-menu input:checked + label {
+                transform: rotate(-90deg);
+            }
+            .collapsible-menu input:checked ~ .links {
+                height: auto;
+            }
+
+            div.links {
+                display: block;
+            }
+
+            div.links a {
+                display: block;
+                margin: 1em;
+            }
+        }
     </style>
 </head>

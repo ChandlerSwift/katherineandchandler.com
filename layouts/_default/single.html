@@ -1,8 +1,12 @@
 {{ partial "head" . }}
 <body>
     <div class="container">
-        <div id="nav" class="links">
-            {{ partial "links" . }}
+        <div class="collapsible-menu">
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle">&#8801;</label><!-- or &#9776;-->
+            <div id="nav" class="links">
+                {{ partial "links" . }}
+            </div>
         </div>
         <div class="content">
             {{ .Content }}
