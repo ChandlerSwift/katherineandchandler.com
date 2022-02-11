@@ -1,0 +1,21 @@
+{{template "top.html"}}
+
+<img class="header" src="/images/headers/rsvp.svg" alt="RSVP">
+<h3>Please let us know your plans by Saturday, August 6, 2022</h3>
+<p style="max-width: 30em; margin: 2em auto;">Enter the first and last name of
+one member of your party below. If you're responding for both yourself and a
+guest (or for your family), you'll be able to RSVP for your entire group on the
+next page.</p>
+
+<form action="/rsvp/" method="POST">
+    <input type="hidden" name="step" value="find-party">
+    <div class="form-group">
+        <input type="text" name="name" id="name" style="width:50%;max-width:400px;" placeholder="Name" value="{{.Name}}" required autofocus><button type="submit">Continue</button>
+    </div>
+</form>
+
+{{with .Status}}
+<p style="max-width: 30em; margin: 2em auto;">{{.}}</p>
+{{end}}
+
+{{template "bottom.html"}}

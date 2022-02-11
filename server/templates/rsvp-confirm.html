@@ -1,0 +1,31 @@
+{{template "top.html"}}
+
+<img class="header" src="/images/headers/rsvp.svg" alt="RSVP">
+<h3>We've received your response!</h3>
+<p style="max-width: 30em; margin: 2em auto;">For any questions regarding
+guests, attire, food, etc., please visit our <a href="/faq/">FAQ page</a> or
+<a href="mailto:kathe.trahan@gmail.com">contact Käthe and Chandler</a>.</p>
+
+<p style="max-width: 30em; margin: 2em auto;">We're crowdsourcing a playlist for
+our reception! If you have a song you'd love to have included, please submit it
+here. You may submit as many as you would like.</p>
+
+<form action="/rsvp/" method="POST">
+    <input type="hidden" name="step" value="add-song">
+    <input type="hidden" name="name" value="{{.Name}}">
+    <div class="form-group">
+        <input type="text" name="song" style="width:50%;max-width:400px;" placeholder="Song" required><button type="submit">Submit</button>
+    </div>
+</form>
+
+{{with .Songs}}
+    <p>Songs you've requested:</p>
+    <style>ul.songs li { list-style: none; }</style>
+    <ul class="songs">
+    {{range .}}
+        <li>{{.Song}}</li>
+    {{end}}
+    </ul>
+{{end}}
+
+{{template "bottom.html"}}

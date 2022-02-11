@@ -1,0 +1,30 @@
+{{template "top.html"}}
+
+<img class="header" src="/images/headers/rsvp.svg" alt="RSVP">
+<div class="side-by-side">
+    <div class="left">
+        <h2>{{.Event}}</h2>
+        <p class="big">{{.Date}}<br>{{.Time}}</p>
+        <p class="big">{{.Location}}</p>
+        <p>{{.DressCode}}</p>
+    </div>
+    <hr>
+    <div class="right">
+        <form action="/rsvp/" method="POST">
+            <input type="hidden" name="step" value="{{.Step}}">
+            {{range $i, $attendee := .Attendees}}
+            <div class="attendee">
+                <p>{{$attendee.Name}}</p>
+                <input type="hidden" name="name" value="{{$attendee.Name}}">
+                <input class="hidden" type="radio" name="attending[{{$i}}]" id="attending-{{$i}}" value="yes"/>
+                <label class="button-label" for="attending-{{$i}}">Will attend</label>
+                <input class="hidden" type="radio" name="attending[{{$i}}]" id="not-attending-{{$i}}" value="no"/>
+                <label class="button-label" for="not-attending-{{$i}}">Will not attend</label>
+            </div>
+            {{end}}
+            <button type="submit">{{.Button}}</button>
+        </form>
+    </div>
+</div>
+
+{{template "bottom.html"}}
