@@ -32,7 +32,7 @@
             <td rowspan="{{$partySize}}">{{.Party.Name}}</td>
             {{end}}
             <td>{{.Name}}</td>
-            <td>{{.RehearsalResponse}}</td>
+            <td>{{if .InvitedToRehearsalDinner}}{{.RehearsalResponse}}{{else}}&mdash;{{end}}</td>
             <td>{{.CeremonyResponse}}</td>
             {{if eq $i 0}}
             <td rowspan="{{$partySize}}">
