@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -126,13 +127,13 @@ func main() {
 			}
 			name := names[0]
 			var attendee Attendee
-			res := db.Where("name = ?", name).Preload("Party.Attendees").First(&attendee)
+			res := db.Where("lower(name) = ?", strings.ToLower(name)).Preload("Party.Attendees").First(&attendee)
 			if res.RowsAffected != 1 {
 				err := tmpl.ExecuteTemplate(rw, "rsvp-find-party.html", map[string]interface{}{
 					"Status": template.HTML("We're having trouble finding your invitation. " +
 						"Please verify that your name is spelled the same way it is on your invitation, " +
 						"or <a href='mailto:kathe.trahan@gmail.com'>contact Käthe and Chandler</a>."),
-					"Name": name,
+					"Name": attendee.Name,
 				})
 				if err != nil {
 					log.Println(err)
@@ -140,9 +141,9 @@ func main() {
 				return
 			}
 			if attendee.CeremonyResponse != NotResponded {
-				db.Where("name = ?", name).Preload("Party.SongRequests").First(&attendee)
+				db.Where("name = ?", attendee.Name).Preload("Party.SongRequests").First(&attendee)
 				err := tmpl.ExecuteTemplate(rw, "rsvp-confirm.html", map[string]interface{}{
-					"Name":  name,
+					"Name":  attendee.Name,
 					"Songs": attendee.Party.SongRequests,
 				})
 				if err != nil {
