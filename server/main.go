@@ -1,8 +1,10 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -62,6 +64,12 @@ type Attendee struct {
 	Party                    Party
 }
 
+//go:embed templates
+var templateFS embed.FS
+
+//go:embed public
+var staticFS embed.FS
+
 func main() {
 	admin_pass := os.Getenv("ADMIN_PASSWORD")
 	if admin_pass == "" {
@@ -72,13 +80,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	tmpl, err := template.ParseGlob("templates/**")
+	tmpl, err := template.ParseFS(templateFS, "templates/**")
 	if err != nil {
 		panic(err)
 	}
 
-	// TODO: go:embed?
-	http.Handle("/", http.FileServer(http.Dir("public/")))
+	staticFS, err := fs.Sub(staticFS, "public")
+	if err != nil {
+		panic(err)
+	}
+	http.Handle("/", http.FileServer(http.FS(staticFS)))
 
 	// These functions aren't really designed with security in mind. Anyone who
 	// can do a bit of research on the internet should be able to get the names
