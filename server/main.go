@@ -248,9 +248,15 @@ func main() {
 				res := db.Where("name = ?", name).First(&attendee)
 				if res.RowsAffected != 1 {
 					log.Printf("Could not find %v", name)
-					http.Error(rw, "Could not find name", http.StatusInternalServerError)
+					http.Error(rw, "Could not find name", http.StatusBadRequest)
+					return
 				}
-				if r.Form[fmt.Sprintf("attending[%d]", i)][0] == "yes" {
+				ceremonyResponse, ok := r.Form[fmt.Sprintf("attending[%d]", i)]
+				if !ok {
+					http.Error(rw, fmt.Sprintf("Please submit a response for %v", name), http.StatusBadRequest)
+					return
+				}
+				if ceremonyResponse[0] == "yes" {
 					attendee.CeremonyResponse = Attending
 				} else {
 					attendee.CeremonyResponse = NotAttending
