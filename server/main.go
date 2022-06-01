@@ -325,8 +325,35 @@ func main() {
 		}
 		var parties []Party
 		db.Preload("Attendees.Party.SongRequests").Find(&parties)
+		dinnerCount := 0
+		dinnerNotRespondedCount := 0
+		ceremonyCount := 0
+		ceremonyNotRespondedCount := 0
+		songCount := 0
+		for _, party := range parties {
+			for _, attendee := range party.Attendees {
+				if attendee.InvitedToRehearsalDinner {
+					if attendee.RehearsalResponse == Attending {
+						dinnerCount += 1
+					} else if attendee.RehearsalResponse == NotResponded {
+						dinnerNotRespondedCount += 1
+					}
+				}
+				if attendee.CeremonyResponse == Attending {
+					ceremonyCount += 1
+				} else if attendee.CeremonyResponse == NotResponded {
+					ceremonyNotRespondedCount += 1
+				}
+			}
+			songCount += len(party.SongRequests)
+		}
 		err := tmpl.ExecuteTemplate(w, "attendees.html", map[string]interface{}{
-			"Parties": parties,
+			"Parties":                   parties,
+			"DinnerCount":               dinnerCount,
+			"DinnerNotRespondedCount":   dinnerNotRespondedCount,
+			"CeremonyCount":             ceremonyCount,
+			"CeremonyNotRespondedCount": ceremonyNotRespondedCount,
+			"SongCount":                 songCount,
 		})
 		if err != nil {
 			log.Println(err)
