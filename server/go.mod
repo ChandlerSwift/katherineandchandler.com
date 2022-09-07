@@ -3,6 +3,7 @@ module github.com/chandlerswift/katherineandchandler.com
 go 1.17
 
 require (
+	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
 	gorm.io/driver/sqlite v1.2.6
 	gorm.io/gorm v1.22.5
 )

@@ -4,12 +4,18 @@ import (
 	"embed"
 	"fmt"
 	"html/template"
+	"image"
+	"image/jpeg"
+	"io"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
+	"golang.org/x/image/draw"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -358,6 +364,112 @@ func main() {
 		if err != nil {
 			log.Println(err)
 		}
+	})
+
+	http.Handle("/uploaded-photos/", http.FileServer(http.Dir("")))
+	http.Handle("/uploaded-thumbs/", http.FileServer(http.Dir("")))
+
+	http.HandleFunc("/photos/", func(w http.ResponseWriter, r *http.Request) {
+		imageFiles, err := os.ReadDir("uploaded-thumbs")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		err = tmpl.ExecuteTemplate(w, "photos.html", map[string]interface{}{
+			"imageFiles": imageFiles,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+	})
+
+	http.HandleFunc("/upload-photo", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		if err := r.ParseMultipartForm(128 << 20); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		files := r.MultipartForm.File["photos"]
+
+		for _, fileHeader := range files {
+			// Open the file
+			file, err := fileHeader.Open()
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			defer file.Close()
+
+			buff := make([]byte, 512)
+			_, err = file.Read(buff)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			filetype := http.DetectContentType(buff)
+			if filetype != "image/jpeg" {
+				http.Error(w, "The provided file format is not allowed. Please upload a JPEG image, or email us another format.", http.StatusBadRequest)
+				return
+			}
+
+			_, err = file.Seek(0, io.SeekStart)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			filename := time.Now().UnixNano()
+			f, err := os.Create(fmt.Sprintf("./uploaded-photos/%d%s", filename, filepath.Ext(fileHeader.Filename)))
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			defer f.Close()
+
+			_, err = io.Copy(f, file)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			thumb, err := os.Create(fmt.Sprintf("./uploaded-thumbs/%d%s", filename, filepath.Ext(fileHeader.Filename)))
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			defer thumb.Close()
+
+			_, err = file.Seek(0, io.SeekStart)
+			src, err := jpeg.Decode(file)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			var width, height int
+			if src.Bounds().Max.Y > src.Bounds().Max.X {
+				width = 256.0 * src.Bounds().Max.X / src.Bounds().Max.Y
+				height = 256
+			} else {
+				width = 256
+				height = 256.0 * src.Bounds().Max.Y / src.Bounds().Max.X
+			}
+			dst := image.NewRGBA(image.Rect(0, 0, width, height))
+
+			draw.NearestNeighbor.Scale(dst, dst.Rect, src, src.Bounds(), draw.Over, nil)
+
+			jpeg.Encode(thumb, dst, nil)
+		}
+
+		http.Redirect(w, r, "/photos", http.StatusTemporaryRedirect)
 	})
 	log.Println("Serving on localhost:8080")
 	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
