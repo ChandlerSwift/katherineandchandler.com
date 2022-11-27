@@ -1,5 +1,4 @@
 baseURL = 'https://katherineandchandler.com/'
 languageCode = 'en-us'
 title = 'Katherine & Chandler'
-timeout = '120s'
-publishDir = '../server/public'
+timeout = '3000s' # about 3 seconds per photo
